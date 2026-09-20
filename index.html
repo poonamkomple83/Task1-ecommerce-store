@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechCart - Online Store</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f5f6fa;
+    color:#222;
+}
+
+/* HEADER */
+header{
+    background:#111827;
+    color:white;
+    padding:15px 5%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.search{
+    flex:1;
+    max-width:500px;
+}
+
+.search input{
+    width:100%;
+    padding:11px 15px;
+    border:none;
+    border-radius:8px;
+    outline:none;
+}
+
+.header-buttons button{
+    border:none;
+    background:#2563eb;
+    color:white;
+    padding:10px 15px;
+    border-radius:7px;
+    cursor:pointer;
+    margin-left:5px;
+}
+
+/* HERO */
+.hero{
+    background:linear-gradient(120deg,#2563eb,#7c3aed);
+    color:white;
+    padding:60px 5%;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:12px;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+/* PRODUCTS */
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:35px auto;
+}
+
+.section-title{
+    margin-bottom:20px;
+    font-size:28px;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.product{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 3px 15px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.product:hover{
+    transform:translateY(-4px);
+}
+
+.product img{
+    width:100%;
+    height:190px;
+    object-fit:contain;
+    padding:15px;
+}
+
+.product-info{
+    padding:18px;
+}
+
+.product h3{
+    margin-bottom:8px;
+}
+
+.price{
+    font-size:22px;
+    font-weight:bold;
+    color:#2563eb;
+    margin:8px 0;
+}
+
+.stock{
+    font-size:14px;
+    color:#555;
+    margin-bottom:12px;
+}
+
+.add-btn{
+    width:100%;
+    padding:11px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.add-btn:hover{
+    background:#1d4ed8;
+}
+
+/* CART PAGE */
+.page{
+    display:none;
+}
+
+.cart-container{
+    width:90%;
+    max-width:1000px;
+    margin:35px auto;
+}
+
+.cart-item{
+    background:white;
+    padding:18px;
+    margin-bottom:15px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.cart-item img{
+    width:100px;
+    height:80px;
+    object-fit:contain;
+}
+
+.cart-info{
+    flex:1;
+}
+
+.quantity{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:8px;
+}
+
+.quantity button{
+    width:30px;
+    height:30px;
+    border:none;
+    border-radius:5px;
+    background:#ddd;
+    cursor:pointer;
+}
+
+.remove{
+    background:#dc2626 !important;
+    color:white;
+    padding:8px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.summary{
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    margin-top:20px;
+}
+
+.summary div{
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+}
+
+.total{
+    font-size:23px;
+    font-weight:bold;
+    border-top:1px solid #ddd;
+    padding-top:15px;
+}
+
+.checkout-btn{
+    width:100%;
+    padding:14px;
+    background:#16a34a;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:17px;
+    margin-top:15px;
+}
+
+/* POPUP */
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+
+.modal{
+    background:white;
+    width:90%;
+    max-width:420px;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.modal h2{
+    margin-bottom:20px;
+}
+
+.modal input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:1px solid #ccc;
+    border-radius:7px;
+}
+
+.modal button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.success{
+    font-size:55px;
+    margin-bottom:10px;
+}
+
+.close{
+    background:#6b7280 !important;
+}
+
+/* FOOTER */
+footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:30px;
+    margin-top:50px;
+}
+
+@media(max-width:600px){
+    header{
+        flex-wrap:wrap;
+    }
+
+    .search{
+        order:3;
+        width:100%;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+    .cart-item{
+        flex-wrap:wrap;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">🛒 TechCart</div>
+
+    <div class="search">
+        <input
+            type="text"
+            id="search"
+            placeholder="Search phones, laptops..."
+            onkeyup="searchProducts()"
+        >
+    </div>
+
+    <div class="header-buttons">
+        <button onclick="showHome()">Home</button>
+        <button onclick="showCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+    </div>
+</header>
+
+
+<!-- HOME PAGE -->
+<div id="homePage">
+
+<section class="hero">
+    <h1>Welcome to TechCart</h1>
+    <p>Phones, Laptops & Electronics at Amazing Prices</p>
+</section>
+
+<div class="container">
+
+    <h2 class="section-title">🔥 Latest Products</h2>
+
+    <div class="products" id="products"></div>
+
+</div>
+
+</div>
+
+
+<!-- CART PAGE -->
+<div id="cartPage" class="page">
+
+<div class="cart-container">
+
+    <h2 class="section-title">🛒 Your Shopping Cart</h2>
+
+    <div id="cartItems"></div>
+
+    <div class="summary">
+
+        <div>
+            <span>Subtotal</span>
+            <span id="subtotal">₹0</span>
+        </div>
+
+        <div>
+            <span>Delivery</span>
+            <span id="delivery">₹0</span>
+        </div>
+
+        <div class="total">
+            <span>Total</span>
+            <span id="total">₹0</span>
+        </div>
+
+        <button class="checkout-btn" onclick="placeOrder()">
+            Place Order
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<footer>
+    <p>© 2026 TechCart</p>
+    <p>Secure Shopping • Fast Delivery • Easy Returns</p>
+</footer>
+
+
+<!-- REGISTRATION POPUP -->
+<div class="overlay" id="registerPopup">
+
+<div class="modal">
+
+    <h2>👋 Welcome to TechCart</h2>
+
+    <p>Create your account to continue shopping.</p>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Full Name"
+    >
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Email Address"
+    >
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+    >
+
+    <button onclick="register()">
+        Register & Continue
+    </button>
+
+</div>
+
+</div>
+
+
+<!-- ORDER SUCCESS POPUP -->
+<div class="overlay" id="successPopup" style="display:none;">
+
+<div class="modal">
+
+    <div class="success">🎉</div>
+
+    <h2>Congratulations!</h2>
+
+    <p style="margin:15px 0;">
+        Your Order Has Been Placed Successfully!
+    </p>
+
+    <p>
+        Order ID:
+        <b id="orderId"></b>
+    </p>
+
+    <button onclick="closeSuccess()">
+        Continue Shopping
+    </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* PRODUCTS */
+
+const products = [
+
+{
+    id:1,
+    name:"Samsung Galaxy M15 5G",
+    price:12999,
+    stock:15,
+    image:"https://images.samsung.com/is/image/samsung/p6pim/in/sm-m156bdbdins/gallery/in-galaxy-m15-5g-sm-m156-sm-m156bdbdins-thumb-539805812?$344_344_PNG$"
+},
+
+{
+    id:2,
+    name:"iPhone 15",
+    price:54999,
+    stock:8,
+    image:"https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-black?wid=400&hei=400&fmt=jpeg"
+},
+
+{
+    id:3,
+    name:"ASUS Gaming Laptop",
+    price:52999,
+    stock:6,
+    image:"https://dlcdnwebimgs.asus.com/gain/8B0E8C3E-0A1A-4A6C-9A42-4C1E2A6D9E5B/"
+},
+
+{
+    id:4,
+    name:"HP 15 Laptop",
+    price:42999,
+    stock:10,
+    image:"https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08995036.png"
+},
+
+{
+    id:5,
+    name:"POCO 5G Smartphone",
+    price:14999,
+    stock:20,
+    image:"https://m.media-amazon.com/images/I/71pZ9R8q2BL._SL1500_.jpg"
+},
+
+{
+    id:6,
+    name:"Wireless Headphones",
+    price:1999,
+    stock:25,
+    image:"https://m.media-amazon.com/images/I/61CGHv6kmWL._SL1500_.jpg"
+}
+
+];
+
+let cart = [];
+
+
+/* REGISTER */
+
+function register(){
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value.trim();
+
+    if(!name || !email || !password){
+
+        alert("Please fill all details.");
+
+        return;
+    }
+
+    localStorage.setItem("userName",name);
+
+    document.getElementById("registerPopup").style.display="none";
+
+    alert("Registration successful! Welcome "+name);
+
+}
+
+
+/* DISPLAY PRODUCTS */
+
+function displayProducts(list = products){
+
+    const container =
+        document.getElementById("products");
+
+    container.innerHTML="";
+
+    if(list.length === 0){
+
+        container.innerHTML =
+        "<h3>No products found.</h3>";
+
+        return;
+    }
+
+    list.forEach(product=>{
+
+        container.innerHTML += `
+
+        <div class="product">
+
+            <img
+                src="${product.image}"
+                alt="${product.name}"
+            >
+
+            <div class="product-info">
+
+                <h3>${product.name}</h3>
+
+                <div class="price">
+                    ₹${product.price.toLocaleString("en-IN")}
+                </div>
+
+                <div class="stock">
+                    Available Quantity:
+                    <b>${product.stock}</b>
+                </div>
+
+                <button
+                    class="add-btn"
+                    onclick="addToCart(${product.id})"
+                >
+                    🛒 Add to Cart
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* ADD TO CART */
+
+function addToCart(id){
+
+    const product =
+        products.find(p=>p.id===id);
+
+    const existing =
+        cart.find(p=>p.id===id);
+
+    if(existing){
+
+        if(existing.quantity < product.stock){
+
+            existing.quantity++;
+
+        }else{
+
+            alert("Maximum available quantity reached.");
+
+            return;
+        }
+
+    }else{
+
+        cart.push({
+
+            id:product.id,
+
+            name:product.name,
+
+            price:product.price,
+
+            image:product.image,
+
+            stock:product.stock,
+
+            quantity:1
+
+        });
+
+    }
+
+    updateCartCount();
+
+    alert(product.name+" added to cart!");
+
+}
+
+
+/* CART COUNT */
+
+function updateCartCount(){
+
+    const count =
+        cart.reduce(
+            (total,item)=>total+item.quantity,
+            0
+        );
+
+    document.getElementById("cartCount").innerText=count;
+
+}
+
+
+/* SHOW CART */
+
+function showCart(){
+
+    document.getElementById("homePage")
+        .style.display="none";
+
+    document.getElementById("cartPage")
+        .style.display="block";
+
+    displayCart();
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* SHOW HOME */
+
+function showHome(){
+
+    document.getElementById("cartPage")
+        .style.display="none";
+
+    document.getElementById("homePage")
+        .style.display="block";
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* DISPLAY CART */
+
+function displayCart(){
+
+    const container =
+        document.getElementById("cartItems");
+
+    container.innerHTML="";
+
+    if(cart.length===0){
+
+        container.innerHTML=`
+
+            <div class="summary">
+
+                <h3>Your cart is empty 😔</h3>
+
+                <button
+                    class="checkout-btn"
+                    onclick="showHome()"
+                >
+                    Continue Shopping
+                </button>
+
+            </div>
+
+        `;
+
+        document.getElementById("subtotal")
+            .innerText="₹0";
+
+        document.getElementById("delivery")
+            .innerText="₹0";
+
+        document.getElementById("total")
+            .innerText="₹0";
+
+        return;
+
+    }
+
+
+    cart.forEach(item=>{
+
+        container.innerHTML += `
+
+        <div class="cart-item">
+
+            <img
+                src="${item.image}"
+                alt="${item.name}"
+            >
+
+            <div class="cart-info">
+
+                <h3>${item.name}</h3>
+
+                <p>
+                    Price:
+                    <b>₹${item.price.toLocaleString("en-IN")}</b>
+                </p>
+
+                <div class="quantity">
+
+                    <button
+                        onclick="changeQuantity(${item.id},-1)"
+                    >
+                        −
+                    </button>
+
+                    <b>${item.quantity}</b>
+
+                    <button
+                        onclick="changeQuantity(${item.id},1)"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button
+                class="remove"
+                onclick="removeFromCart(${item.id})"
+            >
+                Remove
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+
+    calculateTotal();
+
+}
+
+
+/* CHANGE QUANTITY */
+
+function changeQuantity(id,change){
+
+    const item =
+        cart.find(p=>p.id===id);
+
+    if(!item) return;
+
+    item.quantity += change;
+
+    if(item.quantity <= 0){
+
+        removeFromCart(id);
+
+        return;
+
+    }
+
+    if(item.quantity > item.stock){
+
+        item.quantity = item.stock;
+
+        alert("Only "+item.stock+" items available.");
+
+    }
+
+    displayCart();
+
+    updateCartCount();
+
+}
+
+
+/* REMOVE */
+
+function removeFromCart(id){
+
+    cart =
+        cart.filter(item=>item.id!==id);
+
+    displayCart();
+
+    updateCartCount();
+
+}
+
+
+/* TOTAL */
+
+function calculateTotal(){
+
+    const subtotal =
+        cart.reduce(
+            (sum,item)=>
+            sum+(item.price*item.quantity),
+            0
+        );
+
+    const delivery =
+        subtotal >= 500 ? 0 : 50;
+
+    const total =
+        subtotal + delivery;
+
+    document.getElementById("subtotal")
+        .innerText =
+        "₹"+subtotal.toLocaleString("en-IN");
+
+    document.getElementById("delivery")
+        .innerText =
+        delivery===0
+        ? "FREE"
+        : "₹"+delivery;
+
+    document.getElementById("total")
+        .innerText =
+        "₹"+total.toLocaleString("en-IN");
+
+}
+
+
+/* SEARCH */
+
+function searchProducts(){
+
+    const text =
+        document.getElementById("search")
+        .value
+        .toLowerCase();
+
+    const result =
+        products.filter(product=>
+            product.name
+            .toLowerCase()
+            .includes(text)
+        );
+
+    displayProducts(result);
+
+}
+
+
+/* PLACE ORDER */
+
+function placeOrder(){
+
+    if(cart.length===0){
+
+        alert("Your cart is empty!");
+
+        return;
+
+    }
+
+    const orderNumber =
+        "TC"+Date.now().toString().slice(-8);
+
+    document.getElementById("orderId")
+        .innerText=orderNumber;
+
+    document.getElementById("successPopup")
+        .style.display="flex";
+
+    cart=[];
+
+    updateCartCount();
+
+}
+
+
+/* CLOSE SUCCESS */
+
+function closeSuccess(){
+
+    document.getElementById("successPopup")
+        .style.display="none";
+
+    showHome();
+
+}
+
+
+/* INITIAL LOAD */
+
+displayProducts();
+
+updateCartCount();
+
+</script>
+
+</body>
+</html>
